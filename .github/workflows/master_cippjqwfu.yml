@@ -1,29 +1,33 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/azure/functions-action
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy Powershell project to Azure Function App - cippjqwfu
+name: Deploy PowerShell project to Azure Function App
 
 on:
-  push:
-    branches:
-      - master
-  workflow_dispatch:
+  [push]
 
+# CONFIGURATION
+# For help, go to https://github.com/Azure/Actions
+#
+# 1. Set up the following secrets in your repository:
+#   AZUREAPPSERVICE_PUBLISHPROFILE_777503E08D384C3C80027C11C897FE1D
+#
+# 2. Change these variables for your configuration:
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
+  AZURE_FUNCTIONAPP_NAME: 'cippjqwfu'    # set this to your application's name
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
 
 jobs:
   build-and-deploy:
     runs-on: windows-latest
+    environment: dev
     steps:
-      - name: 'Checkout GitHub Action'
-        uses: actions/checkout@v2
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@master
 
-      - name: 'Run Azure Functions Action'
-        uses: Azure/functions-action@v1
-        id: fa
-        with:
-          app-name: 'cippjqwfu'
-          slot-name: 'Production'
-          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_777503E08D384C3C80027C11C897FE1D }}
+    - name: 'Run Azure Functions Action'
+      uses: Azure/functions-action@v1
+      id: fa
+      with:
+        app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+        package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_777503E08D384C3C80027C11C897FE1D }}
+
+# For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
