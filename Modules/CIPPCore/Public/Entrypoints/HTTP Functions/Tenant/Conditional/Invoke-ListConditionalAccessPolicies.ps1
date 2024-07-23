@@ -19,8 +19,6 @@ Function Invoke-ListConditionalAccessPolicies {
         param (
             [Parameter()]
             $ID,
-
-            [Parameter(Mandatory = $true)]
             $Locations
         )
         if ($id -eq 'All') {
@@ -39,8 +37,6 @@ Function Invoke-ListConditionalAccessPolicies {
         param (
             [Parameter()]
             $ID,
-
-            [Parameter(Mandatory = $true)]
             $RoleDefinitions
         )
         if ($id -eq 'All') {
@@ -59,8 +55,6 @@ Function Invoke-ListConditionalAccessPolicies {
         param (
             [Parameter()]
             $ID,
-
-            [Parameter(Mandatory = $true)]
             $Users
         )
         if ($id -eq 'All') {
@@ -78,8 +72,6 @@ Function Invoke-ListConditionalAccessPolicies {
         param (
             [Parameter()]
             $ID,
-
-            [Parameter(Mandatory = $true)]
             $Groups
         )
         if ($id -eq 'All') {
@@ -98,8 +90,6 @@ Function Invoke-ListConditionalAccessPolicies {
         param (
             [Parameter()]
             $ID,
-
-            [Parameter(Mandatory = $true)]
             $Applications
         )
         if ($id -eq 'All') {
@@ -404,8 +394,8 @@ Function Invoke-ListConditionalAccessPolicies {
         $AllNamedLocations = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/identity/conditionalAccess/namedLocations' -tenantid $tenantfilter
         $AllApplications = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/applications' -tenantid $tenantfilter
         $AllRoleDefinitions = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/roleManagement/directory/roleDefinitions' -tenantid $tenantfilter
-        $GroupListOutput = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/groups' -tenantid $tenantfilter
-        $UserListOutput = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/users' -tenantid $tenantfilter | Select-Object * -ExcludeProperty *extensionAttribute*
+        $GroupListOutput = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/groups?$top=999' -tenantid $tenantfilter
+        $UserListOutput = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/users?$top=999' -tenantid $tenantfilter | Select-Object * -ExcludeProperty *extensionAttribute*
 
         $GraphRequest = foreach ($cap in $ConditionalAccessPolicyOutput) {
             $temp = [PSCustomObject]@{
