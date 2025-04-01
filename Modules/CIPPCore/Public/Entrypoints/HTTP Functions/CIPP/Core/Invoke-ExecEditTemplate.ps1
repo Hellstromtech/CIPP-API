@@ -3,7 +3,7 @@ using namespace System.Net
 Function Invoke-ExecEditTemplate {
     <#
     .FUNCTIONALITY
-        Entrypoint
+        Entrypoint,AnyTenant
     .ROLE
         CIPP.Core.ReadWrite
     #>
@@ -11,7 +11,8 @@ Function Invoke-ExecEditTemplate {
     param($Request, $TriggerMetadata)
 
     $APIName = $Request.Params.CIPPEndpoint
-    Write-LogMessage -headers $Request.Headers -API $APINAME -message 'Accessed this API' -Sev 'Debug'
+    $Headers = $Request.Headers
+    Write-LogMessage -headers $Headers -API $APIName -message 'Accessed this API' -Sev 'Debug'
 
     try {
         $Table = Get-CippTable -tablename 'templates'
@@ -24,7 +25,7 @@ Function Invoke-ExecEditTemplate {
             $OriginalTemplate = Get-CIPPAzDataTableEntity @Table -Filter "PartitionKey eq 'IntuneTemplate' and RowKey eq '$GUID'"
             $OriginalTemplate = ($OriginalTemplate.JSON | ConvertFrom-Json -Depth 100)
             $RawJSON = $OriginalTemplate.RAWJson
-            Set-CIPPIntuneTemplate -RawJSON $RawJSON -GUID $GUID -DisplayName $Request.body.displayName -Description $Request.body.description -templateType $OriginalTemplate.Type
+            Set-CIPPIntuneTemplate -RawJSON $RawJSON -GUID $GUID -DisplayName $Request.body.displayName -Description $Request.body.description -templateType $OriginalTemplate.Type -Headers $Request.Headers
         } else {
             $Table.Force = $true
 
